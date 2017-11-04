@@ -1,6 +1,6 @@
 package com.ms.thediamondkata;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Diamond {
@@ -9,7 +9,16 @@ public class Diamond {
         if (c < 'A' || c > 'Z') {
             throw new IllegalArgumentException(c + " is outside the valid range A-Z");
         } else {
-            return Collections.singletonList("A");
+            final int size = (2 * (c - 'A')) + 1;
+            List<String> result = new ArrayList<>();
+            while (result.size() < size) {
+                StringBuilder row = new StringBuilder();
+                while (row.length() < size) {
+                    row.append('A');
+                }
+                result.add(row.toString());
+            }
+            return result;
         }
     }
 }

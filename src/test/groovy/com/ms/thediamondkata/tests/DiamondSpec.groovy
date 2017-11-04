@@ -15,10 +15,13 @@ class DiamondSpec extends Specification {
     @Shared
     char aChar = 'A'
     @Shared
+    char bChar = 'B'
+    @Shared
     char zChar = 'Z'
     @Shared
     Range<Character> validRange = aChar..zChar
-
+    @Shared
+    Range<Character> testRange = bChar..zChar
 
     @Unroll("rejects '#c'")
     def "rejects characters outside the range A-Z"() {
@@ -34,8 +37,36 @@ class DiamondSpec extends Specification {
                 .take(50)
     }
 
-    def "The diaomnd of A is 'A'"(){
+    def "The diaomnd of A is 'A'"() {
         expect:
         diamond.apply(aChar) == ["A"]
+    }
+
+    @Unroll
+    def "diamond (#c) is square"() {
+        given:
+        def result = diamond.apply(c)
+
+        expect:
+        result.every {
+            it.length() == result.size()
+        }
+
+        where:
+        c << testRange
+    }
+
+    @Unroll("diamond (#c) should have #expectedHeight rows")
+    def "a diamond's height is determined by the character argument"() {
+        given:
+        def result = diamond.apply(c)
+
+        expect:
+        result.size() == expectedHeight
+
+        where:
+        c << testRange
+
+        expectedHeight = ((c - aChar) * 2) + 1
     }
 }
