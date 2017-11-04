@@ -33,4 +33,9 @@ class DiamondSpec extends Specification {
                 .filter { !validRange.contains(it) }
                 .take(50)
     }
+
+    def "The diaomnd of A is 'A'"(){
+        expect:
+        diamond.apply(aChar) == ["A"]
+    }
 }
