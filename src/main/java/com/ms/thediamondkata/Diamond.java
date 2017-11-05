@@ -12,25 +12,18 @@ public class Diamond {
             throw new IllegalArgumentException(character + " is outside the valid range A-Z");
         } else {
             final int size = (2 * (character - 'A')) + 1;
-            char nextChar = 'A';
-            boolean pastHalfWay = false;
             List<String> result = new ArrayList<>();
-            while (result.size() < size) {
+            for (char nextChar = 'A'; nextChar <= character; nextChar++) {
                 StringBuilder row = new StringBuilder();
                 while (row.length() < size) {
                     row.append(nextChar);
                 }
                 result.add(row.toString());
-                if (pastHalfWay) {
-                    nextChar--;
-                } else {
-                    nextChar++;
-                    if (nextChar == character) {
-                        pastHalfWay = true;
-                    }
-                }
             }
-
+            final int index = result.size();
+            for (int i = 0; i < (index - 1); i++) {
+                result.add(index, result.get(i));
+            }
             for (String row : result) {
                 logger.info(row);
             }
