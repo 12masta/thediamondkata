@@ -56,40 +56,34 @@ class DiamondSpec extends Specification {
         c << testRange
     }
 
-    @Unroll("diamond (#c) should have #expectedHeight rows")
-    def "a diamond's height is determined by the character argument"() {
-        given:
-        def result = diamond.apply(c)
-
-        expect:
-        result.size() == expectedHeight
-
-        where:
-        c << testRange
-
-        expectedHeight = ((c - aChar) * 2) + 1
-    }
-
     @Unroll
     def "the appropriate character appears in each row and column in diamond (#c)"() {
         given:
         def result = diamond.apply(c)
+        and:
+        int midpoint = result.size().intdiv(2)
 
         expect:
-        int lastIndex = result.size() - 1
-        int midPoint = result.size().intdiv(2)
-
         for (rowChar in aChar..c) {
-            int rowIndex = rowChar - aChar
-            def topLeft = [x: midPoint - rowIndex, y: rowIndex]
-            def topRight = [x: lastIndex - topLeft.x, y: rowIndex]
-            def bottomLeft = [x: topLeft.x, y: lastIndex - rowIndex]
-            def bottomRight = [x: topRight.x, y: bottomLeft.y]
+            int y = rowChar - aChar
+            int x = midpoint - y
+            assert result[y].charAt(x) == rowChar
+        }
 
-            assert result[topLeft.y].charAt(topLeft.x) == rowChar
-            assert result[topRight.y].charAt(topRight.x) == rowChar
-            assert result[bottomLeft.y].charAt(bottomLeft.x) == rowChar
-            assert result[bottomRight.y].charAt(bottomRight.x) == rowChar
+        where:
+        c << testRange
+    }
+
+    @Unroll
+    def "the diamond is symetrical"() {
+        given:
+        def result = diamond.apply(c)
+
+        expect:
+        result == result.reverse()
+        and:
+        result.every {
+            it == it.reverse()
         }
 
         where:
