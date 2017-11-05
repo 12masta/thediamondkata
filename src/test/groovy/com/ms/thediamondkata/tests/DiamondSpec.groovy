@@ -64,19 +64,20 @@ class DiamondSpec extends Specification {
         int midPoint = result.size().intdiv(2)
         int y = rowChar - aChar
         int x = midPoint - y
+
         expect:
         result[y].charAt(x) == rowChar
 
         where:
-        row << testRange.collectMany {c2 ->
-            (aChar..c2).collect{new Tuple(c2, it)}
+        row << testRange.collectMany { c2 ->
+            (aChar..c2).collect { new Tuple(c2, it) }
         }
         c = row[0]
         rowChar = row[1]
     }
 
     @Unroll
-    def "the diamond is symetrical for character #c"() {
+    def "the diamond is symetrical for character (#c"() {
         given:
         def result = diamond.apply(c)
 
@@ -89,5 +90,28 @@ class DiamondSpec extends Specification {
 
         where:
         c << testRange
+    }
+
+    @Unroll
+    def "areas arround the character #rowChar in diamond (#c) are padded"() {
+        given:
+        def result = diamond.apply(c)
+        and:
+        int midPoint = result.size().intdiv(2)
+        int y = rowChar - aChar
+        int x = midPoint - y
+
+        expect:
+        new StringBuilder(result[y][0..midPoint])
+                .deleteCharAt(x)
+                .toString()
+                .every { it == '-' }
+
+        where:
+        row << testRange.collectMany { c2 ->
+            (aChar..c2).collect { new Tuple(c2, it) }
+        }
+        c = row[0]
+        rowChar = row[1]
     }
 }
