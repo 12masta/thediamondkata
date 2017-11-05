@@ -11,13 +11,19 @@ public class Diamond {
         if (character < 'A' || character > 'Z') {
             throw new IllegalArgumentException(character + " is outside the valid range A-Z");
         } else {
-            final int size = (2 * (character - 'A')) + 1;
+            final int midpoint = character - 'A';
             List<String> result = new ArrayList<>();
             for (char nextChar = 'A'; nextChar <= character; nextChar++) {
+                final int x = midpoint - result.size();
                 StringBuilder row = new StringBuilder();
-                while (row.length() < size) {
-                    row.append(nextChar);
+                while (row.length() < x) {
+                    row.append('-');
                 }
+                row.append(nextChar);
+                while (row.length() <= midpoint) {
+                    row.append('-');
+                }
+                row.append(new StringBuilder(row.substring(0, midpoint)).reverse());
                 result.add(row.toString());
             }
             final int index = result.size();
