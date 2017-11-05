@@ -69,4 +69,30 @@ class DiamondSpec extends Specification {
 
         expectedHeight = ((c - aChar) * 2) + 1
     }
+
+    @Unroll
+    def "the appropriate character appears in each row and column in diamond (#c)"() {
+        given:
+        def result = diamond.apply(c)
+
+        expect:
+        int lastIndex = result.size() - 1
+        int midPoint = result.size().intdiv(2)
+
+        for (rowChar in aChar..c) {
+            int rowIndex = rowChar - aChar
+            def topLeft = [x: midPoint - rowIndex, y: rowIndex]
+            def topRight = [x: lastIndex - topLeft.x, y: rowIndex]
+            def bottomLeft = [x: topLeft.x, y: lastIndex - rowIndex]
+            def bottomRight = [x: topRight.x, y: bottomLeft.y]
+
+            assert result[topLeft.y].charAt(topLeft.x) == rowChar
+            assert result[topRight.y].charAt(topRight.x) == rowChar
+            assert result[bottomLeft.y].charAt(bottomLeft.x) == rowChar
+            assert result[bottomRight.y].charAt(bottomRight.x) == rowChar
+        }
+
+        where:
+        c << testRange
+    }
 }
