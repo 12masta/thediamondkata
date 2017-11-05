@@ -57,25 +57,26 @@ class DiamondSpec extends Specification {
     }
 
     @Unroll
-    def "the appropriate character appears in each row and column in diamond (#c)"() {
+    def "#rowChar appears in the correct row and column is diamond(#c)"() {
         given:
         def result = diamond.apply(c)
         and:
-        int midpoint = result.size().intdiv(2)
-
+        int midPoint = result.size().intdiv(2)
+        int y = rowChar - aChar
+        int x = midPoint - y
         expect:
-        for (rowChar in aChar..c) {
-            int y = rowChar - aChar
-            int x = midpoint - y
-            assert result[y].charAt(x) == rowChar
-        }
+        result[y].charAt(x) == rowChar
 
         where:
-        c << testRange
+        row << testRange.collectMany {c2 ->
+            (aChar..c2).collect{new Tuple(c2, it)}
+        }
+        c = row[0]
+        rowChar = row[1]
     }
 
     @Unroll
-    def "the diamond is symetrical"() {
+    def "the diamond is symetrical for character #c"() {
         given:
         def result = diamond.apply(c)
 
